@@ -287,7 +287,7 @@
 
 <body>
     <header>
-        <h1>你是希望家园展示3：50</h1>
+        <h1>你是希望家园展示</h1>
     </header>
     <nav>
         <a href="#">首页</a>
@@ -372,7 +372,6 @@
         </div>
         <h2 id="jrwm">加入我们</h2>
         <form action="" id="myForm">
-            <!-- todo 必填为空提示弹窗 -->
             <p>*姓名</p>
             <input type="text" id="name" placeholder="请输入你的姓名">
             <p>性别</p>
@@ -402,71 +401,70 @@
         <p>版权所有 &copy; </p>
     </footer>
     <script>
-        let currentSlide = 0;
+// 处理按钮滑动
+let currentSlide = 0;
 
-        function moveSlide(direction) {
-            const slides = document.getElementById('cardSlider');
-            const totalSlides = slides.children.length;
-            const newSlideIndex = currentSlide + direction;
+function moveSlide(direction) {
+    const slides = document.getElementById('cardSlider');
+    const totalSlides = slides.children.length;
+    const newSlideIndex = currentSlide + direction;
 
-            if (newSlideIndex < 0 || newSlideIndex >= totalSlides) {
-                return; // 到达边界时不进行任何操作
-            }
-
-            currentSlide = newSlideIndex;
-            const slideWidth = slides.children[0].clientWidth + 20;//滑动距离：卡片的宽度+卡片的左和右外边距（10px + 10px）
-            slides.style.transform = 'translateX(' + (-currentSlide * slideWidth) + 'px)';
-        }
-
-        // 处理触控滑动
-        const cardSlider = document.getElementById('cardSlider');
-    const cards = document.querySelectorAll('.card');
-    let currentIndex = 0;
-    let startX, isDragging = false;
-
-    function moveSlide(direction) {
-        currentIndex += direction;
-        if (currentIndex < 0) {
-            currentIndex = 0;
-        } else if (currentIndex >= cards.length) {
-            currentIndex = cards.length - 1;
-        }
-        updateSlider();
+    if (newSlideIndex < 0 || newSlideIndex >= totalSlides) {
+        return; // 到达边界时不进行任何操作
     }
 
-    function updateSlider() {
-        const offset = -currentIndex * 100; // 每个卡片占满视口宽度
-        cardSlider.style.transform = `translateX(${offset}vw)`;
+    currentSlide = newSlideIndex;
+    const slideWidth = slides.children[0].clientWidth + 20; // 滑动距离：卡片的宽度 + 卡片的左和右外边距（10px + 10px）
+    slides.style.transform = 'translateX(' + (-currentSlide * slideWidth) + 'px)';
+}
+
+// 绑定按钮的点击事件
+document.querySelector('.arrow-left').onclick = () => moveSlide(-1);
+document.querySelector('.arrow-right').onclick = () => moveSlide(1);
+
+// 处理触控滑动
+let startX; // 触摸起始位置
+let isTouching = false; // 标志位，指示是否正在触摸滑动
+
+// 触摸开始事件
+document.getElementById('cardSlider').addEventListener('touchstart', (event) => {
+    startX = event.touches[0].clientX; // 获取触摸起始位置
+    isTouching = true; // 设置为正在触摸
+});
+
+// 触摸移动事件
+document.getElementById('cardSlider').addEventListener('touchmove', (event) => {
+    if (!isTouching) return; // 如果不是触摸滑动则返回
+    const moveX = event.touches[0].clientX; // 获取当前触摸位置
+    const diffX = moveX - startX; // 计算滑动的距离
+
+    // 更新卡片的位置
+    const slider = document.getElementById('cardSlider');
+    slider.style.transform = `translateX(${diffX - (currentSlide * (slider.children[0].clientWidth + 20))}px)`; // 根据滑动距离调整位置
+});
+
+// 触摸结束事件
+document.getElementById('cardSlider').addEventListener('touchend', (event) => {
+    if (!isTouching) return; // 如果不是触摸滑动则返回
+    isTouching = false; // 重置标志位
+
+    const diffX = event.changedTouches[0].clientX - startX; // 计算最终滑动距离
+
+    // 如果滑动距离大于一定值，则切换卡片
+    if (Math.abs(diffX) > 50) {
+        if (diffX > 0) {
+            moveSlide(-1); // 向右滑动
+        } else {
+            moveSlide(1); // 向左滑动
+        }
     }
 
-    cardSlider.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        startX = e.touches[0].clientX;
-    });
+    // 重置卡片位置
+    const slider = document.getElementById('cardSlider');
+    slider.style.transform = `translateX(${-currentSlide * (slider.children[0].clientWidth + 20)}px)`; 
+});
 
-    cardSlider.addEventListener('touchmove', (e) => {
-        if (isDragging) {
-            const currentX = e.touches[0].clientX;
-            const diffX = startX - currentX;
-
-            // 根据滑动方向判断
-            if (diffX > 50) {
-                moveSlide(1); // 向左滑动
-                isDragging = false;
-            } else if (diffX < -50) {
-                moveSlide(-1); // 向右滑动
-                isDragging = false;
-            }
-            e.preventDefault(); // 防止滚动
-        }
-    });
-
-    cardSlider.addEventListener('touchend', () => {
-        isDragging = false;
-    });
-        // 绑定按钮的点击事件
-        document.querySelector('.arrow-left').onclick = () => moveSlide(-1);
-        document.querySelector('.arrow-right').onclick = () => moveSlide(1);
+//图片点击放大
         function openImage(img) {
             // 创建模态框。给文档创建一个div元素，再给这个div添加.image-modal类来设置样式，这样就创建了一个模态框
             const modal = document.createElement("div");

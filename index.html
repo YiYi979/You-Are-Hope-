@@ -48,6 +48,7 @@
             align-items: center;
             flex-wrap: wrap;
             background: url(图片/总图.png) no-repeat bottom/cover;
+            /* 从底部开始显示背景图片 */
             position: relative;
             font-size: 2em;
             letter-spacing: 10px;
@@ -122,7 +123,7 @@
         .card-container {
             overflow: hidden;
             position: relative;
-            margin-bottom: 10px;
+            margin-bottom: 30px;
         }
 
         .card-slider {
@@ -133,14 +134,21 @@
         .card {
             width: 300px;
             padding: 20px;
-            margin: 10px;
+            margin: 20px 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
         }
 
         .card img {
             width: 100%;
             /* img宽度为div.card盒子内容宽度的100% */
+            border-radius: 5px;
         }
 
         .card p {
@@ -182,12 +190,36 @@
 
         .gallery {
             column-count: 4;
+            margin-bottom: 10px;
+            /* 同级容器之间的间距，设置容器的margin */
         }
 
         .gallery img {
             width: 100%;
-            margin-bottom: 10px;
             border-radius: 6px;
+            transition: box-shadow 0.3s;
+        }
+
+        .gallery img:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .image-modal img {
+            max-width: 100%;
+            max-height: 100%;
         }
 
         form p {
@@ -242,7 +274,8 @@
             color: #fff;
             height: 60px;
         }
-        footer p{
+
+        footer p {
             line-height: 30px;
             display: inline-block;
             margin: 0;
@@ -277,8 +310,8 @@
         </div>
         <h2 id="sjzs">设计展示</h2>
         <div class="card-container">
-            <button class="arrow arrow-left">&#10094;</button>
-            <div class="card-slider">
+            <button class="arrow arrow-left" onclick="moveSlide(-1)">&#10094;</button>
+            <div class="card-slider" id="cardSlider">
                 <div class="card">
                     <img src="图片/沙漠风情.png" alt="">
                     <h3>沙漠风情</h3>
@@ -292,7 +325,7 @@
                 <div class="card">
                     <img src="图片/衣帽间和墓地.png" alt="">
                     <h3>衣帽间和墓地</h3>
-                    <p>衣帽间双进门的设计，入门后可以看到中央的和平百合纪念碑，随即沿着铺着地毯的轴线步入室内景观，每个放衣服的格子都做了独立式处理，非常有仪式感。中心区域是墓地，衣帽间和墓地结合方便穿戴和回档，墓地上下通往衣帽间，左右做了墓地的内凹式独立入口，同时做了角落衣帽间的对景设计，让原本落寞的角落变得十分别致。
+                    <p>衣帽间双进门入门后，位于门厅中央的和平百合纪念碑映入眼帘，随即沿着铺着地毯的轴线步入室内景观，每个放衣服的格子都做了独立式处理，非常有仪式感。中心区域是墓地，衣帽间和墓地结合方便穿戴和回档，墓地上下通往衣帽间，左右做了墓地的内凹式独立入口，同时做了角落衣帽间的对景设计，让原本落寞的角落变得十分别致。
                     </p>
                 </div>
                 <div class="card">
@@ -321,19 +354,19 @@
                     <p>懒得介绍了</p>
                 </div>
             </div>
-            <button class="arrow arrow-right">&#10095;</button>
+            <button class="arrow arrow-right" onclick="moveSlide(1)">&#10095;</button>
         </div>
         <h2 id="jx">精选</h2>
         <div class="gallery">
-            <!-- todo 图片点击放大，悬停时加阴影 -->
-            <!-- 这里用column分成4列div区域 -->
-            <div> <img src="图片/沙漠风情.png" alt="">
+            <!-- todo 图片点击放大 -->
+            <!-- 这里用column把 div.gallery 分成 4列div区域 -->
+            <div> <img src="图片/沙漠风情.png" alt="" onclick="openImage(this)">
             </div>
-            <div> <img src="图片/停车位和牛奶机.png" alt="">
+            <div> <img src="图片/停车位和牛奶机.png" alt="" onclick="openImage(this)">
             </div>
-            <div> <img src="图片/养殖场.png" alt="">
+            <div> <img src="图片/养殖场.png" alt="" onclick="openImage(this)">
             </div>
-            <div> <img src="图片/衣帽间和墓地.png" alt="">
+            <div> <img src="图片/衣帽间和墓地.png" alt="" onclick="openImage(this)">
             </div>
         </div>
         <h2 id="jrwm">加入我们</h2>
@@ -366,6 +399,68 @@
     <footer>
         <p>版权所有 &copy; </p>
     </footer>
+    <script>
+        let currentSlide = 0;
+
+        function moveSlide(direction) {
+            const slides = document.getElementById('cardSlider');
+            const totalSlides = slides.children.length;
+
+            // 计算新的索引
+            const newSlideIndex = currentSlide + direction;
+
+            // 检查边界
+            if (newSlideIndex < 0 || newSlideIndex >= totalSlides) {
+                return; // 到达边界时不进行任何操作
+            }
+
+            currentSlide = newSlideIndex;
+
+            const slideWidth = slides.children[0].clientWidth;
+            slides.style.transform = 'translateX(' + (-currentSlide * slideWidth) + 'px)';
+        }
+
+        const cardSlider = document.getElementById('cardSlider');
+        let startX;
+
+        cardSlider.addEventListener('touchstart', (event) => {
+            startX = event.touches[0].clientX;
+        });
+
+        cardSlider.addEventListener('touchmove', (event) => {
+            const moveX = event.touches[0].clientX - startX;
+            if (moveX > 50) {
+                moveSlide(-1);
+                startX = null; // 重置起始点
+            } else if (moveX < -50) {
+                moveSlide(1);
+                startX = null; // 重置起始点
+            }
+        });
+
+        // 绑定按钮的点击事件
+        document.querySelector('.arrow-left').onclick = () => moveSlide(-1);
+        document.querySelector('.arrow-right').onclick = () => moveSlide(1);
+
+        function openImage(img) {
+        // 创建模态框。给文档创建一个div元素，再给这个div添加.image-modal类来设置div的样式，这样就创建了一个模态框
+        const modal = document.createElement("div");
+        modal.classList.add('image-modal');
+        
+        // 创建放大的图片
+        const largeImg = document.createElement('img');
+        largeImg.src = img.src;
+
+        // 点击模态框关闭
+        modal.onclick = function() {
+            document.body.removeChild(modal);
+        };
+
+        // 将图片添加到模态框
+        modal.appendChild(largeImg);
+        document.body.appendChild(modal);
+    }
+    </script>
 </body>
 
 </html>

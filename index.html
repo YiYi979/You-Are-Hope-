@@ -422,6 +422,7 @@
             slides.style.transform = 'translateX(' + (-currentSlide * slideWidth) + 'px)';
         }
 
+        // 处理触控滑动
         const cardSlider = document.getElementById('cardSlider');
         let startX;
 
@@ -431,14 +432,15 @@
 
         cardSlider.addEventListener('touchmove', (event) => {
             const moveX = event.touches[0].clientX - startX;
-            if (moveX > 10) {
+            if (moveX > 50) {
                 moveSlide(-1);
                 startX = null; // 重置起始点
-            } else if (moveX < -10) {
+            } else if (moveX < -50) {
                 moveSlide(1);
                 startX = null; // 重置起始点
             }
         });
+
 
         // 绑定按钮的点击事件
         document.querySelector('.arrow-left').onclick = () => moveSlide(-1);

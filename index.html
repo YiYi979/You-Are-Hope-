@@ -198,12 +198,13 @@
             width: 100%;
             border-radius: 6px;
             transition: box-shadow 0.3s;
-            cursor: pointer; /* 鼠标悬停时变成手势 */
+            cursor: pointer;
+            /* 鼠标悬停时变成手势 */
         }
 
         .gallery img:hover {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                    }
+        }
 
         form p {
             margin: 0;
@@ -370,7 +371,7 @@
             </div>
         </div>
         <h2 id="jrwm">加入我们</h2>
-        <form action="">
+        <form action="" id="myForm">
             <!-- todo 必填为空提示弹窗 -->
             <p>*姓名</p>
             <input type="text" id="name" placeholder="请输入你的姓名">
@@ -382,7 +383,8 @@
             <p>电子邮箱</p>
             <input type="email" placeholder="请输入你的邮箱">
             <p>*联系方式</p>
-            <input type="tel" id="tel" placeholder="请输入你的手机号">
+            <input type="" id="phone" placeholder="请输入11位手机号">
+            <div id="message" style="color: red; display: none;">请输入11位手机号！</div>
             <p>游戏年龄</p>
             <select name="" id="">
                 <option value="">三个月以内</option>
@@ -460,6 +462,46 @@
             modal.appendChild(largeImg);
             document.body.appendChild(modal);
         }
+
+        const form = document.getElementById("myForm"); //定义一个变量，值是id为myForm的元素
+        form.addEventListener("submit", function (event) { //为元素添加事件监听器,事件类型为submit，事件处理函数接收一个事件对象作为参数
+            const nameInput = document.getElementById("name"); //事件处理函数中，定义一个变量，值是id为name的元素
+            const phoneInput = document.getElementById("phone");
+            const phoneInputnum = document.getElementById('phone').value;
+            const phonePattern = /^\d{11}$/;
+            if (nameInput.value.trim() === "") {
+                alert("姓名不能为空");
+                event.preventDefault(); // 阻止表单提交
+            } else if (phoneInput.value.trim() === "") {
+                alert("联系方式不能为空");
+                event.preventDefault(); // 阻止表单提交
+            } else if (!phonePattern.test(phoneInputnum)) {
+                alert('联系方式必须是11位数字！');
+                event.preventDefault(); // 阻止表单提交
+            } else {
+                alert("成功提交！");
+            }
+        });
+
+        const phoneInput = document.getElementById('phone');
+        const messageDiv = document.getElementById('message');
+
+        phoneInput.addEventListener('input', function () {
+            // 只允许输入数字
+            this.value = this.value.replace(/[^\d]/g, '');
+
+            // 限制最大长度为11
+            if (this.value.length > 11) {
+                this.value = this.value.slice(0, 11);
+            }
+
+            // 实时提示
+            if (this.value.length < 11) {
+                messageDiv.style.display = 'block'; // 显示提示
+            } else {
+                messageDiv.style.display = 'none'; // 隐藏提示
+            }
+        });
     </script>
 </body>
 

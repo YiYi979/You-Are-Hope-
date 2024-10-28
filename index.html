@@ -198,29 +198,12 @@
             width: 100%;
             border-radius: 6px;
             transition: box-shadow 0.3s;
+            cursor: pointer; /* 鼠标悬停时变成手势 */
         }
 
         .gallery img:hover {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
-
-        .image-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .image-modal img {
-            max-width: 100%;
-            max-height: 100%;
-        }
+                    }
 
         form p {
             margin: 0;
@@ -279,6 +262,24 @@
             line-height: 30px;
             display: inline-block;
             margin: 0;
+        }
+
+        .image-modal {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .image-modal img {
+            max-width: 100%;
+            max-height: 100%;
         }
     </style>
 </head>
@@ -358,7 +359,6 @@
         </div>
         <h2 id="jx">精选</h2>
         <div class="gallery">
-            <!-- todo 图片点击放大 -->
             <!-- 这里用column把 div.gallery 分成 4列div区域 -->
             <div> <img src="图片/沙漠风情.png" alt="" onclick="openImage(this)">
             </div>
@@ -443,23 +443,23 @@
         document.querySelector('.arrow-right').onclick = () => moveSlide(1);
 
         function openImage(img) {
-        // 创建模态框。给文档创建一个div元素，再给这个div添加.image-modal类来设置div的样式，这样就创建了一个模态框
-        const modal = document.createElement("div");
-        modal.classList.add('image-modal');
-        
-        // 创建放大的图片
-        const largeImg = document.createElement('img');
-        largeImg.src = img.src;
+            // 创建模态框。给文档创建一个div元素，再给这个div添加.image-modal类来设置样式，这样就创建了一个模态框
+            const modal = document.createElement("div");
+            modal.classList.add('image-modal');
 
-        // 点击模态框关闭
-        modal.onclick = function() {
-            document.body.removeChild(modal);
-        };
+            // 创建放大的图片
+            const largeImg = document.createElement('img');
+            largeImg.src = img.src;
 
-        // 将图片添加到模态框
-        modal.appendChild(largeImg);
-        document.body.appendChild(modal);
-    }
+            // 点击模态框关闭
+            modal.onclick = function () {
+                document.body.removeChild(modal);
+            };
+
+            // 将图片添加到模态框
+            modal.appendChild(largeImg);
+            document.body.appendChild(modal);
+        }
     </script>
 </body>
 

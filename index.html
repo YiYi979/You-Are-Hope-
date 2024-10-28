@@ -414,7 +414,7 @@
             }
 
             currentSlide = newSlideIndex;
-            const slideWidth = slides.children[0].clientWidth;
+            const slideWidth = slides.children[0].clientWidth+20;//加上卡片的左和右外边距（10px + 10px）
             slides.style.transform = 'translateX(' + (-currentSlide * slideWidth) + 'px)';
         }
 

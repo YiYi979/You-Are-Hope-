@@ -402,50 +402,48 @@
         <p>版权所有 &copy; </p>
     </footer>
     <script>
-        let currentSlide = 0;
+let currentSlide = 0;
 
-        function moveSlide(direction) {
-            const slides = document.getElementById('cardSlider');
-            const totalSlides = slides.children.length;
+function moveSlide(direction) {
+    const slides = document.getElementById('cardSlider');
+    const totalSlides = slides.children.length;
+    const newSlideIndex = currentSlide + direction;
 
-            // 计算新的索引
-            const newSlideIndex = currentSlide + direction;
+    if (newSlideIndex < 0 || newSlideIndex >= totalSlides) {
+        return; // 到达边界时不进行任何操作
+    }
 
-            // 检查边界
-            if (newSlideIndex < 0 || newSlideIndex >= totalSlides) {
-                return; // 到达边界时不进行任何操作
-            }
+    currentSlide = newSlideIndex;
+    const slideWidth = slides.children[0].clientWidth;
+    slides.style.transform = 'translateX(' + (-currentSlide * slideWidth) + 'px)';
+}
 
-            currentSlide = newSlideIndex;
+// 处理触控滑动
+const cardSlider = document.getElementById('cardSlider');
+let startX;
 
-            const slideWidth = slides.children[0].clientWidth;
-            slides.style.transform = 'translateX(' + (-currentSlide * slideWidth) + 'px)';
-        }
+cardSlider.addEventListener('touchstart', (event) => {
+    startX = event.touches[0].clientX;
+});
 
-        // 处理触控滑动
-        const cardSlider = document.getElementById('cardSlider');
-        let startX;
+cardSlider.addEventListener('touchmove', (event) => {
+    const moveX = event.touches[0].clientX - startX;
 
-        cardSlider.addEventListener('touchstart', (event) => {
-            startX = event.touches[0].clientX;
-        });
+    // 防止页面滚动
+    event.preventDefault();
 
-        cardSlider.addEventListener('touchmove', (event) => {
-            const moveX = event.touches[0].clientX - startX;
-            if (moveX > 50) {
-                moveSlide(-1);
-                startX = null; // 重置起始点
-            } else if (moveX < -50) {
-                moveSlide(1);
-                startX = null; // 重置起始点
-            }
-        });
+    if (moveX > 50) {
+        moveSlide(-1);
+        startX = null; // 重置起始点
+    } else if (moveX < -50) {
+        moveSlide(1);
+        startX = null; // 重置起始点
+    }
+});
 
-
-        // 绑定按钮的点击事件
-        document.querySelector('.arrow-left').onclick = () => moveSlide(-1);
-        document.querySelector('.arrow-right').onclick = () => moveSlide(1);
-
+// 绑定按钮的点击事件
+document.querySelector('.arrow-left').onclick = () => moveSlide(-1);
+document.querySelector('.arrow-right').onclick = () => moveSlide(1);
         function openImage(img) {
             // 创建模态框。给文档创建一个div元素，再给这个div添加.image-modal类来设置样式，这样就创建了一个模态框
             const modal = document.createElement("div");

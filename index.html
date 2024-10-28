@@ -429,10 +429,10 @@
 
         cardSlider.addEventListener('touchmove', (event) => {
             const moveX = event.touches[0].clientX - startX;
-            if (moveX > 50) {
+            if (moveX > 30) {
                 moveSlide(-1);
                 startX = null; // 重置起始点
-            } else if (moveX < -50) {
+            } else if (moveX < -30) {
                 moveSlide(1);
                 startX = null; // 重置起始点
             }

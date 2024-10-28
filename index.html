@@ -314,43 +314,43 @@
         <div class="card-container">
             <button class="arrow arrow-left" onclick="moveSlide(-1)">&#10094;</button>
             <div class="card-slider" id="cardSlider">
-                <div class="card">
+                <div class="card" id="card">
                     <img src="图片/沙漠风情.png" alt="">
                     <h3>沙漠风情</h3>
                     <p>家园的中心景观,沙漠动物大观园，有灰熊夫妇、独狼、毒蛇，野马可换成阿玛龙。曲径婉转，景色宜人。</p>
                 </div>
-                <div class="card">
+                <div class="card" id="card">
                     <img src="图片/停车位和牛奶机.png" alt="">
                     <h3>停车位和牛奶机</h3>
                     <p>水上乐园，豪华私人车库，趣味牛奶机。车库上面配置了停马位方便换乘。湖面小桥蜿蜒曲折，风景宜人。（牛奶机是唯一的非原创设计，因为太喜欢了，就作为小景搬来家园里了）</p>
                 </div>
-                <div class="card">
+                <div class="card" id="card">
                     <img src="图片/衣帽间和墓地.png" alt="">
                     <h3>衣帽间和墓地</h3>
                     <p>衣帽间双进门入门后，位于门厅中央的和平百合纪念碑映入眼帘，随即沿着铺着地毯的轴线步入室内景观，每个放衣服的格子都做了独立式处理，非常有仪式感。中心区域是墓地，衣帽间和墓地结合方便穿戴和回档，墓地上下通往衣帽间，左右做了墓地的内凹式独立入口，同时做了角落衣帽间的对景设计，让原本落寞的角落变得十分别致。
                     </p>
                 </div>
-                <div class="card">
+                <div class="card" id="card">
                     <img src="图片/养殖场.png" alt="">
                     <h3>养殖场</h3>
                     <p>懒得介绍了</p>
                 </div>
-                <div class="card">
+                <div class="card" id="card">
                     <img src="图片/厨房.png" alt="">
                     <h3>厨房</h3>
                     <p>懒得介绍了</p>
                 </div>
-                <div class="card">
+                <div class="card" id="card">
                     <img src="图片/打铁房.png" alt="">
                     <h3>打铁房</h3>
                     <p>懒得介绍了</p>
                 </div>
-                <div class="card">
+                <div class="card" id="card">
                     <img src="图片/橡胶屋.png" alt="">
                     <h3>橡胶屋</h3>
                     <p>懒得介绍了</p>
                 </div>
-                <div class="card">
+                <div class="card" id="card">
                     <img src="图片/矿区和仓库.png" alt="">
                     <h3>矿区和仓库</h3>
                     <p>懒得介绍了</p>
@@ -414,7 +414,7 @@
             }
 
             currentSlide = newSlideIndex;
-            const slideWidth = slides.children[0].clientWidth + 20;//加上卡片的左和右外边距（10px + 10px）
+            const slideWidth = slides.children[0].clientWidth + 20;//滑动距离：卡片的宽度+卡片的左和右外边距（10px + 10px）
             slides.style.transform = 'translateX(' + (-currentSlide * slideWidth) + 'px)';
         }
 

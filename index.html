@@ -314,43 +314,43 @@
         <div class="card-container">
             <button class="arrow arrow-left" onclick="moveSlide(-1)">&#10094;</button>
             <div class="card-slider" id="cardSlider">
-                <div class="card" id="card">
+                <div class="card">
                     <img src="图片/沙漠风情.png" alt="">
                     <h3>沙漠风情</h3>
                     <p>家园的中心景观,沙漠动物大观园，有灰熊夫妇、独狼、毒蛇，野马可换成阿玛龙。曲径婉转，景色宜人。</p>
                 </div>
-                <div class="card" id="card">
+                <div class="card">
                     <img src="图片/停车位和牛奶机.png" alt="">
                     <h3>停车位和牛奶机</h3>
                     <p>水上乐园，豪华私人车库，趣味牛奶机。车库上面配置了停马位方便换乘。湖面小桥蜿蜒曲折，风景宜人。（牛奶机是唯一的非原创设计，因为太喜欢了，就作为小景搬来家园里了）</p>
                 </div>
-                <div class="card" id="card">
+                <div class="card">
                     <img src="图片/衣帽间和墓地.png" alt="">
                     <h3>衣帽间和墓地</h3>
                     <p>衣帽间双进门入门后，位于门厅中央的和平百合纪念碑映入眼帘，随即沿着铺着地毯的轴线步入室内景观，每个放衣服的格子都做了独立式处理，非常有仪式感。中心区域是墓地，衣帽间和墓地结合方便穿戴和回档，墓地上下通往衣帽间，左右做了墓地的内凹式独立入口，同时做了角落衣帽间的对景设计，让原本落寞的角落变得十分别致。
                     </p>
                 </div>
-                <div class="card" id="card">
+                <div class="card">
                     <img src="图片/养殖场.png" alt="">
                     <h3>养殖场</h3>
                     <p>懒得介绍了</p>
                 </div>
-                <div class="card" id="card">
+                <div class="card">
                     <img src="图片/厨房.png" alt="">
                     <h3>厨房</h3>
                     <p>懒得介绍了</p>
                 </div>
-                <div class="card" id="card">
+                <div class="card">
                     <img src="图片/打铁房.png" alt="">
                     <h3>打铁房</h3>
                     <p>懒得介绍了</p>
                 </div>
-                <div class="card" id="card">
+                <div class="card">
                     <img src="图片/橡胶屋.png" alt="">
                     <h3>橡胶屋</h3>
                     <p>懒得介绍了</p>
                 </div>
-                <div class="card" id="card">
+                <div class="card">
                     <img src="图片/矿区和仓库.png" alt="">
                     <h3>矿区和仓库</h3>
                     <p>懒得介绍了</p>
@@ -419,29 +419,51 @@
         }
 
         // 处理触控滑动
-        const card = document.getElementById('card');
         const cardSlider = document.getElementById('cardSlider');
-        let startX, startY, currentX = 0, currentY = 0, isDragging = false;
+    const cards = document.querySelectorAll('.card');
+    let currentIndex = 0;
+    let startX, isDragging = false;
 
-        cardSlider.addEventListener('touchstart', (e) => {
-            isDragging = true;
-            startX = e.touches[0].clientX - currentX;
-            startY = e.touches[0].clientY - currentY;
-        });
+    function moveSlide(direction) {
+        currentIndex += direction;
+        if (currentIndex < 0) {
+            currentIndex = 0;
+        } else if (currentIndex >= cards.length) {
+            currentIndex = cards.length - 1;
+        }
+        updateSlider();
+    }
 
-        cardSlider.addEventListener('touchmove', (e) => {
-            if (isDragging) {
-                currentX = e.touches[0].clientX - startX;
-                currentY = e.touches[0].clientY - startY;
-                card.style.transform = `translate(${currentX}px, ${currentY}px)`;
-                e.preventDefault(); // 防止滚动
+    function updateSlider() {
+        const offset = -currentIndex * 100; // 每个卡片占满视口宽度
+        cardSlider.style.transform = `translateX(${offset}vw)`;
+    }
+
+    cardSlider.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        startX = e.touches[0].clientX;
+    });
+
+    cardSlider.addEventListener('touchmove', (e) => {
+        if (isDragging) {
+            const currentX = e.touches[0].clientX;
+            const diffX = startX - currentX;
+
+            // 根据滑动方向判断
+            if (diffX > 50) {
+                moveSlide(1); // 向左滑动
+                isDragging = false;
+            } else if (diffX < -50) {
+                moveSlide(-1); // 向右滑动
+                isDragging = false;
             }
-        });
+            e.preventDefault(); // 防止滚动
+        }
+    });
 
-        cardSlider.addEventListener('touchend', () => {
-            isDragging = false;
-            // 可以在这里添加结束时的逻辑
-        });
+    cardSlider.addEventListener('touchend', () => {
+        isDragging = false;
+    });
         // 绑定按钮的点击事件
         document.querySelector('.arrow-left').onclick = () => moveSlide(-1);
         document.querySelector('.arrow-right').onclick = () => moveSlide(1);
